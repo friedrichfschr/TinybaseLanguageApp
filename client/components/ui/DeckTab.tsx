@@ -1,4 +1,4 @@
-import { View, StyleSheet, Alert, Pressable } from "react-native";
+import { View, StyleSheet, Alert, Pressable, Platform } from "react-native";
 import React from "react";
 import { useRow } from "tinybase/ui-react";
 import DeckStore from "@/stores/deckStore";
@@ -36,25 +36,38 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
     console.log("Edit deck:", deckId);
   };
 
+  const handleReviewDeck = () => {
+    // Navigate to review/flashcards for this deck
+    router.push(`/(index)/(collections)/(flashcards)/Cards?deckId=${deckId}`);
+  };
+
   const handleDeleteDeck = () => {
-    Alert.alert(
-      "Delete Deck",
-      "Are you sure you want to delete this deck?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: () => {
-            deleteDeck(deckId);
+    if (Platform.OS === "web") {
+      // Use browser confirm dialog for web
+      if (window.confirm("Are you sure you want to delete this deck?")) {
+        deleteDeck(deckId);
+      }
+    } else {
+      // Use React Native Alert for mobile
+      Alert.alert(
+        "Delete Deck",
+        "Are you sure you want to delete this deck?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
           },
-          style: "destructive",
-        },
-      ],
-      { cancelable: true }
-    );
+          {
+            text: "Delete",
+            onPress: () => {
+              deleteDeck(deckId);
+            },
+            style: "destructive",
+          },
+        ],
+        { cancelable: true }
+      );
+    }
   };
 
   const deckColor =
@@ -67,21 +80,26 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
   };
 
   return (
-    <Pressable
-      style={deckItemStyle}
-      onPress={() => {
-        router.push(
-          `/(index)/(collections)/(flashcards)/Cards?deckId=${deckId}`
-        );
-      }}
-    >
+    <View style={deckItemStyle}>
       <ThemedView style={styles.deckInfo}>
-        <ThemedText type="defaultSemiBold" style={styles.deckName}>
-          {deckData?.name || "Unnamed Deck"}
-        </ThemedText>
-        <ThemedText variant="muted" style={styles.deckCount}>
-          {cardCount} cards
-        </ThemedText>
+        <Pressable
+          onPress={() => {
+            router.push(
+              `/(index)/(collections)/(flashcards)/Cards?deckId=${deckId}`
+            );
+          }}
+          style={({ pressed }) => [
+            styles.pressable,
+            pressed && { opacity: 0.7 },
+          ]}
+        >
+          <ThemedText type="defaultSemiBold" style={styles.deckName}>
+            {deckData?.name || "Unnamed Deck"}
+          </ThemedText>
+          <ThemedText variant="muted" style={styles.deckCount}>
+            {cardCount} cards
+          </ThemedText>
+        </Pressable>
       </ThemedView>
 
       <ThemedView style={styles.actions}>
@@ -91,16 +109,24 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
           onPress={handleEditDeck}
           style={styles.actionButton}
         >
-          <MaterialIcons name="edit" size={20} color="white" />
+          {Platform.OS === "web" ? (
+            <ThemedText style={styles.actionButtonText}>Edit</ThemedText>
+          ) : (
+            <MaterialIcons name="edit" size={20} color="white" />
+          )}
         </Button>
 
         <Button
           variant="ghost"
           size="sm"
-          onPress={() => {}}
+          onPress={handleReviewDeck}
           style={styles.actionButton}
         >
-          <MaterialIcons name="play-arrow" size={20} color="white" />
+          {Platform.OS === "web" ? (
+            <ThemedText style={styles.actionButtonText}>Review</ThemedText>
+          ) : (
+            <MaterialIcons name="play-arrow" size={20} color="white" />
+          )}
         </Button>
 
         <Button
@@ -109,10 +135,14 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
           onPress={handleDeleteDeck}
           style={styles.actionButton}
         >
-          <MaterialIcons name="delete" size={20} color="white" />
+          {Platform.OS === "web" ? (
+            <ThemedText style={styles.actionButtonText}>Delete</ThemedText>
+          ) : (
+            <MaterialIcons name="delete" size={20} color="white" />
+          )}
         </Button>
       </ThemedView>
-    </Pressable>
+    </View>
   );
 };
 
@@ -131,6 +161,10 @@ const styles = StyleSheet.create({
   deckInfo: {
     flex: 1,
   },
+  pressable: {
+    // Ensure the pressable takes up the whole area
+    paddingVertical: 4,
+  },
   deckName: {
     marginBottom: 4,
     color: "white",
@@ -145,6 +179,12 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     marginLeft: 4,
+    minWidth: Platform.OS === "web" ? 60 : 36,
+  },
+  actionButtonText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });
 
