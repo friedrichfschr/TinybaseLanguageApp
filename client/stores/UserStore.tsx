@@ -1,0 +1,130 @@
+import { createMergeableStore, Value } from "tinybase/with-schemas";
+import * as UiReact from "tinybase/ui-react/with-schemas";
+import { useCreateClientPersisterAndStart } from "./persistence/useCreateClientPersisterAndStart";
+import { useCreateServerSynchronizerAndStart } from "./synchronization/useCreateServerSynchronizerAndStart";
+import { useUser } from "@clerk/clerk-expo";
+import DeckStore from "./deckStore";
+import { useCallback } from "react";
+import { randomUUID } from "expo-crypto";
+import { useDelRowCallback, useRowIds, useStore } from "tinybase/ui-react";
+
+const VALUES_SCHEMA = {
+  id: { type: "string" },
+  name: { type: "string" },
+  email: { type: "string", default: "emailDefaulthahahha" },
+  profileImageUrl: { type: "string" },
+  createdAt: { type: "number", default: Date.now() },
+  updatedAt: { type: "number", default: Date.now() },
+} as const;
+
+const TABLES_SCHEMA = {
+  folders: {
+    id: { type: "string" },
+    name: { type: "string" },
+    createdAt: { type: "number", default: Date.now() },
+    updatedAt: { type: "number", default: Date.now() },
+  },
+  decks: {
+    id: { type: "string" },
+    name: { type: "string" },
+    createdAt: { type: "number" },
+    updatedAt: { type: "number" },
+    folderId: { type: "string", default: "" },
+  },
+} as const;
+
+type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
+type ShoppingListValueId = keyof typeof VALUES_SCHEMA;
+
+const {
+  useCreateMergeableStore,
+  useProvideStore,
+  useValue,
+  useSetValueCallback,
+  useStoreIds,
+  useTable,
+} = UiReact as UiReact.WithSchemas<Schemas>;
+export const useUserStoreId = () => "UserStore_" + useUser().user.id;
+
+export const useStoreValue = <ValueId extends ShoppingListValueId>(
+  valueId: ValueId
+): [
+  Value<Schemas[1], ValueId>,
+  (value: Value<Schemas[1], ValueId>) => void
+] => [
+  useValue(valueId, useUserStoreId()),
+  useSetValueCallback(
+    valueId,
+    (value: Value<Schemas[1], ValueId>) => value,
+    [],
+    useUserStoreId()
+  ),
+];
+
+export const useDelDeckCallback = () => {
+  const store = useStore(useUserStoreId());
+  return useCallback(
+    (deckId: string) => {
+      store.delRow("decks", deckId);
+    },
+    [store]
+  );
+};
+
+export const useAddDeckCallback = () => {
+  const store = useStore(useUserStoreId());
+  return useCallback(
+    (name: string, color: string, folderId: string) => {
+      const deckId = randomUUID();
+      store.setRow("decks", deckId, {
+        id: deckId,
+        name,
+        color,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        folderId: folderId,
+      });
+    },
+
+    [store]
+  );
+};
+
+export const useAddFolderCallback = () => {
+  const store = useStore(useUserStoreId());
+  return useCallback(
+    (name: string, color: string) => {
+      const id = randomUUID();
+      store.setRow("folders", id, {
+        id,
+        name,
+        color,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+    },
+    [store]
+  );
+};
+
+export const useDeckIDs = () => {
+  return useRowIds("decks", useUserStoreId());
+};
+
+export default function UserStore() {
+  const storeId = useUserStoreId();
+  const store = useCreateMergeableStore(() =>
+    createMergeableStore().setSchema(TABLES_SCHEMA, VALUES_SCHEMA)
+  );
+
+  useCreateClientPersisterAndStart(storeId, store);
+  useCreateServerSynchronizerAndStart(storeId, store);
+  useProvideStore(storeId, store);
+
+  store.setValue("email", useUser().user.primaryEmailAddress.emailAddress);
+  store.setValue("id", useUser().user.id);
+  store.setValue("name", useUser().user.fullName);
+  store.setValue("profileImageUrl", useUser().user.imageUrl);
+
+  console.log(useStoreIds());
+}
