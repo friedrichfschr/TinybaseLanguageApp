@@ -15,46 +15,45 @@ export default function FlashcardsLayout() {
   const primaryColor = useThemeColor({}, "primary");
   const mutedColor = useThemeColor({}, "textMuted");
 
-  // Define tab bar styles for consistency
-  const screenOptions = {
-    tabBarStyle: {
-      backgroundColor,
-      borderTopWidth: 1,
-      borderTopColor: "rgba(0, 0, 0, 0.1)",
-      paddingTop: 8,
-      paddingBottom: 8,
-      height: 60,
-      elevation: 8,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: -2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      display: shouldHideHeaderAndTabBar ? "none" : "flex",
-    },
-    tabBarActiveTintColor: primaryColor,
-    tabBarInactiveTintColor: mutedColor,
-    tabBarLabelStyle: {
-      fontSize: 12,
-      fontWeight: "500",
-      marginTop: 2,
-    },
-    headerShown: !shouldHideHeaderAndTabBar,
-    ...(process.env.EXPO_OS !== "ios"
-      ? {}
-      : {
-          headerLargeTitle: true,
-          headerTransparent: true,
-          headerBlurEffect: "systemChromeMaterial",
-          headerLargeTitleShadowVisible: false,
-          headerShadowVisible: true,
-          headerLargeStyle: {
-            backgroundColor: "transparent",
-          },
-        }),
-  };
-
   return (
-    <Tabs screenOptions={screenOptions}>
+    <Tabs
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor,
+          borderTopWidth: 1,
+          borderTopColor: "rgba(0, 0, 0, 0.1)",
+          paddingTop: 8,
+          paddingBottom: 8,
+          height: 60,
+          elevation: 8,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+          display: shouldHideHeaderAndTabBar ? "none" : "flex",
+        },
+        tabBarActiveTintColor: primaryColor,
+        tabBarInactiveTintColor: mutedColor,
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "500",
+          marginTop: 2,
+        },
+        headerShown: !shouldHideHeaderAndTabBar,
+        ...(process.env.EXPO_OS !== "ios"
+          ? {}
+          : {
+              headerLargeTitle: true,
+              headerTransparent: true,
+              headerBlurEffect: "systemChromeMaterial",
+              headerLargeTitleShadowVisible: false,
+              headerShadowVisible: true,
+              headerLargeStyle: {
+                backgroundColor: "transparent",
+              },
+            }),
+      }}
+    >
       <Tabs.Screen
         name="Cards"
         options={{

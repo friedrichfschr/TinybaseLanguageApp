@@ -1,13 +1,13 @@
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { ThemedSafeAreaView, ThemedView } from "@/components/ThemedView";
 
 export default function ReviewOptions() {
   return (
-    <ThemedView style={styles.container}>
+    <ThemedSafeAreaView style={styles.container}>
       <ThemedText type="title">Review Options</ThemedText>
       <ThemedText>Configure your review settings here</ThemedText>
-    </ThemedView>
+    </ThemedSafeAreaView>
   );
 }
 
