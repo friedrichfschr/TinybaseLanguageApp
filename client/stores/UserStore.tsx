@@ -1,4 +1,4 @@
-import { createMergeableStore, Value, } from "tinybase/with-schemas";
+import { createMergeableStore, Value } from "tinybase/with-schemas";
 import * as UiReact from "tinybase/ui-react/with-schemas";
 import { useCreateClientPersisterAndStart } from "./persistence/useCreateClientPersisterAndStart";
 import { useCreateServerSynchronizerAndStart } from "./synchronization/useCreateServerSynchronizerAndStart";
@@ -6,7 +6,7 @@ import { useUser } from "@clerk/clerk-expo";
 import DeckStore from "./deckStore";
 import { useCallback } from "react";
 import { randomUUID } from "expo-crypto";
-import { useDelRowCallback, useRowIds, useStore,  } from "tinybase/ui-react";
+import { useDelRowCallback, useRowIds, useStore } from "tinybase/ui-react";
 
 const VALUES_SCHEMA = {
   id: { type: "string" },
@@ -77,7 +77,7 @@ export const useAddDeckCallback = () => {
       const deckId = randomUUID();
       store.setRow("decks", deckId, {
         id: deckId,
-        valuesCopy: JSON.stringify({deckId, name, color, folderId}),
+        valuesCopy: JSON.stringify({ deckId, name, color, folderId }),
       });
     },
 
@@ -120,26 +120,20 @@ export const useValuesCopy = (
   ),
 ];
 
-
 export default function UserStore() {
-  console.log("UserStore");
   const storeId = useUserStoreId();
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setSchema(TABLES_SCHEMA, VALUES_SCHEMA)
   );
 
   useCreateClientPersisterAndStart(storeId, store);
-  // useCreateServerSynchronizerAndStart(storeId, store);
+  useCreateServerSynchronizerAndStart(storeId, store);
   useProvideStore(storeId, store);
 
-  store.setValue("email", useUser().user.primaryEmailAddress.emailAddress);
-  store.setValue("id", useUser().user.id);
-  store.setValue("name", useUser().user.fullName);
-  store.setValue("profileImageUrl", useUser().user.imageUrl);
-
-
-return Object.entries(useTable("decks", storeId)).map(([deckId]) => {
-  console.log("deckIdInObjectMap", deckId);
-  return <DeckStore deckId={deckId} useValuesCopy={useValuesCopy} />;
-});
+  return Object.entries(useTable("decks", storeId)).map(([deckId]) => {
+    console.log("deckIdInObjectMap", deckId);
+    return (
+      <DeckStore deckId={deckId} useValuesCopy={useValuesCopy} key={deckId} />
+    );
+  });
 }

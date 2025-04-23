@@ -1,13 +1,12 @@
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { ThemedSafeAreaView, ThemedView } from "@/components/ThemedView";
 
 export default function Cards() {
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title">Cards</ThemedText>
+    <ThemedSafeAreaView style={styles.container}>
       <ThemedText>Manage your flashcards here</ThemedText>
-    </ThemedView>
+    </ThemedSafeAreaView>
   );
 }
 

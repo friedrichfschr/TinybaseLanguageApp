@@ -25,21 +25,18 @@ const TABLES_SCHEMA = {
     updatedAt: { type: "number", default: Date.now() },
     isPublic: { type: "boolean", default: false },
     id: { type: "string" },
-    interval:  { type: "number", default: 0 },
+    interval: { type: "number", default: 0 },
     nextReview: { type: "number", default: 0 },
     easeFactor: { type: "number", default: 2.5 },
     incorrectCount: { type: "number", default: 0 },
     correctCount: { type: "number", default: 0 },
-
   },
   users: {
     name: { type: "string" },
     profileImageUrl: { type: "string" },
     id: { type: "string" },
   },
-  reviews: {
-
-  }
+  reviews: {},
 } as const;
 
 type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
@@ -49,19 +46,19 @@ const { useCreateMergeableStore, useProvideStore } =
 
 export const useDeckStoreId = (id: string) => "DeckStore_" + id;
 
-// TO DO: create and provide and intialize the deck stores inside the Userstore. Then use the same approach as in the shopping list 
-// tutorial of having a deck values copy in the User store. When creating a new deck 
+// TO DO: create and provide and intialize the deck stores inside the Userstore. Then use the same approach as in the shopping list
+// tutorial of having a deck values copy in the User store. When creating a new deck
 // React hook for using a deck store
 export default function DeckStore({
-    deckId,
-     useValuesCopy,
-    } : {
-    deckId: string,
-    useValuesCopy?: (id: string) => [string, (valuesCopy: string)=> void];
-  }) {
-    console.log("DeckStore")
+  deckId,
+  useValuesCopy,
+}: {
+  deckId: string;
+  useValuesCopy?: (id: string) => [string, (valuesCopy: string) => void];
+}) {
+  console.log("DeckStore");
 
-    const [valuesCopy, setValuesCopy] = useValuesCopy(deckId)
+  const [valuesCopy, setValuesCopy] = useValuesCopy(deckId);
 
   const storeId = useDeckStoreId(deckId);
   const store = useCreateMergeableStore(() =>
@@ -69,7 +66,7 @@ export default function DeckStore({
   );
 
   useCreateClientPersisterAndStart(storeId, store, valuesCopy);
-  // useCreateServerSynchronizerAndStart(storeId, store);
+  useCreateServerSynchronizerAndStart(storeId, store);
   useProvideStore(storeId, store);
 
   return null;

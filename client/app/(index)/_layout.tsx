@@ -1,18 +1,11 @@
+import { Tabs } from "expo-router/tabs";
+import { StyleSheet } from "react-native";
 import { SignedIn, useClerk } from "@clerk/clerk-expo";
-import { Redirect, Stack, usePathname } from "expo-router";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
-import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
-import UserStore from "@/stores/UserStore";
-import { ThemedText } from "@/components/ThemedText";
+import { Redirect } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Inspector } from "tinybase/ui-react-inspector";
+import UserStore from "@/stores/UserStore";
 
 export default function AppLayout() {
   const { user } = useClerk();
@@ -21,56 +14,81 @@ export default function AppLayout() {
     return <Redirect href="/(auth)" />;
   }
 
-  const pathname = usePathname();
+  // Get theme colors for tabs
+  const backgroundColor = useThemeColor({}, "background");
+  const primaryColor = useThemeColor({}, "primary");
+  const mutedColor = useThemeColor({}, "textMuted");
 
-  const inFlashcardsRoute = pathname.includes("(flashcards)");
+  // Define tab bar styles for consistency
+  const screenOptions = {
+    tabBarStyle: {
+      backgroundColor,
+      borderTopWidth: 1,
+      borderTopColor: "rgba(0, 0, 0, 0.1)",
+      paddingTop: 8,
+      paddingBottom: 8,
+      height: 60,
+      elevation: 8,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: -2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    tabBarActiveTintColor: primaryColor,
+    tabBarInactiveTintColor: mutedColor,
+    tabBarLabelStyle: {
+      fontSize: 12,
+      fontWeight: 500,
+      marginTop: 2,
+    },
+    headerShown: false,
+  };
 
-  UserStore();
-  const isDarkTheme = useColorScheme() === "dark";
   return (
     <SignedIn>
-      <Tabs>
-        <TabSlot />
-        <TabList
-          style={{
-            paddingBottom: 30,
-            paddingHorizontal: 30,
-            backgroundColor: useThemeColor({}, "background"),
+      <Tabs screenOptions={screenOptions}>
+        <Tabs.Screen
+          name="Books"
+          options={{
+            title: "Books",
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name="menu-book" size={24} color={color} />
+            ),
           }}
-        >
-          <TabTrigger name="Books" href="/(index)/Books" style={styles.mainTab}>
-            <Text>Books</Text>
-          </TabTrigger>
-          <TabTrigger
-            name="decks"
-            href="/(index)/(collections)/decks"
-            style={styles.mainTab}
-          >
-            <Text>Collections</Text>
-          </TabTrigger>
-          <TabTrigger
-            name="Profile"
-            href="/(index)/Profile"
-            style={styles.mainTab}
-          >
-            <MaterialIcons name="person" size={30} />
-          </TabTrigger>
-        </TabList>
+        />
+        <Tabs.Screen
+          name="(collections)"
+          options={{
+            title: "Collections",
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons
+                name="collections-bookmark"
+                size={24}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="Profile"
+          options={{
+            title: "Profile",
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name="person" size={24} color={color} />
+            ),
+          }}
+        />
+
+        {/* Include screens that shouldn't show in tab bar */}
+        <Tabs.Screen
+          name="(collections)/createDeck"
+          options={{
+            href: null, // Don't show in tab bar
+          }}
+        />
       </Tabs>
       {process.env.EXPO_OS === "web" ? <Inspector /> : null}
+      <UserStore />
     </SignedIn>
   );
 }
-
-const styles = StyleSheet.create({
-  mainTab: {
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "red",
-  },
-  FlashcardTab: {
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "blue",
-  },
-});

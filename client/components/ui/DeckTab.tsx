@@ -1,16 +1,14 @@
 import { View, StyleSheet, Alert, Pressable, Platform } from "react-native";
 import React from "react";
 import { useRow, useValues } from "tinybase/ui-react";
-import DeckStore, {useDeckStoreId} from "@/stores/deckStore";
-import { useDelDeckCallback, } from "@/stores/UserStore";
+import DeckStore, { useDeckStoreId } from "@/stores/deckStore";
+import { useDelDeckCallback } from "@/stores/UserStore";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Button from "@/components/ui/button";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { router } from "expo-router";
-
-
 
 type DeckTabProps = {
   deckId: string;
@@ -21,10 +19,10 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
   const deleteDeck = useDelDeckCallback();
 
   const deckStoreId = useDeckStoreId(deckId);
-  const deckValues = useValues(deckStoreId)
+  const deckValues = useValues(deckStoreId);
 
   // Initialize the deck store
-  
+
   // Get the number of cards in the deck (placeholder for now)
   const cardCount = 0; // This can be updated when implementing cards
 
@@ -35,7 +33,7 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
 
   const handleReviewDeck = () => {
     // Navigate to review/flashcards for this deck
-    router.push(`/(index)/(collections)/(flashcards)/Cards?deckId=${deckId}`);
+    router.push(`/(flashcards)/Cards?deckId=${deckId}`);
   };
 
   const handleDeleteDeck = () => {
@@ -81,9 +79,7 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
       <ThemedView style={styles.deckInfo}>
         <Pressable
           onPress={() => {
-            router.push(
-              `/(index)/(collections)/(flashcards)/Cards?deckId=${deckId}`
-            );
+            router.push(`/(flashcards)/Cards?deckId=${deckId}`);
           }}
           style={({ pressed }) => [
             styles.pressable,
