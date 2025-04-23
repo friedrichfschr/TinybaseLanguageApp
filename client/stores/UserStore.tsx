@@ -74,6 +74,7 @@ export const useAddDeckCallback = () => {
   const store = useStore(useUserStoreId());
   return useCallback(
     (name: string, color: string, folderId: string) => {
+      console.log(color);
       const deckId = randomUUID();
       store.setRow("decks", deckId, {
         id: deckId,
@@ -127,7 +128,7 @@ export default function UserStore() {
   );
 
   useCreateClientPersisterAndStart(storeId, store);
-  useCreateServerSynchronizerAndStart(storeId, store);
+  // useCreateServerSynchronizerAndStart(storeId, store);
   useProvideStore(storeId, store);
 
   return Object.entries(useTable("decks", storeId)).map(([deckId]) => {

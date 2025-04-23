@@ -13,7 +13,7 @@ const VALUES_SCHEMA = {
   updatedAt: { type: "number", default: Date.now() },
   isPublic: { type: "boolean", default: false },
   id: { type: "string" },
-  color: { type: "string", default: "#0a7ea4" },
+  color: { type: "string" },
   folderId: { type: "string", default: "" },
 } as const;
 
@@ -41,14 +41,12 @@ const TABLES_SCHEMA = {
 
 type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
 
-const { useCreateMergeableStore, useProvideStore } =
+const { useCreateMergeableStore, useProvideStore, useValuesListener } =
   UiReact as UiReact.WithSchemas<Schemas>;
 
 export const useDeckStoreId = (id: string) => "DeckStore_" + id;
 
-// TO DO: create and provide and intialize the deck stores inside the Userstore. Then use the same approach as in the shopping list
-// tutorial of having a deck values copy in the User store. When creating a new deck
-// React hook for using a deck store
+
 export default function DeckStore({
   deckId,
   useValuesCopy,
@@ -65,8 +63,15 @@ export default function DeckStore({
     createMergeableStore().setSchema(TABLES_SCHEMA, VALUES_SCHEMA)
   );
 
+  useValuesListener(
+    ()=> setValuesCopy(JSON.stringify({...store.getValues(),deckId })),
+    [setValuesCopy],
+    false, 
+    store
+  )
+
   useCreateClientPersisterAndStart(storeId, store, valuesCopy);
-  useCreateServerSynchronizerAndStart(storeId, store);
+  // useCreateServerSynchronizerAndStart(storeId, store);
   useProvideStore(storeId, store);
 
   return null;

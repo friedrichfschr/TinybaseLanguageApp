@@ -7,8 +7,9 @@ export default function FlashcardsLayout() {
   const pathname = usePathname();
 
   // Determine if the current screen should hide header and tab bar
-  const shouldHideHeaderAndTabBar =
-    pathname?.includes("/reviewing") || pathname?.includes("/Reviewing");
+  const shouldHideTabBar =
+    pathname?.includes("/reviewing") || pathname?.includes("/Reviewing") 
+    || pathname?.includes("/DeckSettings");
 
   // Get theme colors for tabs
   const backgroundColor = useThemeColor({}, "background");
@@ -30,7 +31,7 @@ export default function FlashcardsLayout() {
           shadowOffset: { width: 0, height: -2 },
           shadowOpacity: 0.1,
           shadowRadius: 4,
-          display: shouldHideHeaderAndTabBar ? "none" : "flex",
+          display: shouldHideTabBar ? "none" : "flex",
         },
         tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: mutedColor,
@@ -39,25 +40,13 @@ export default function FlashcardsLayout() {
           fontWeight: "500",
           marginTop: 2,
         },
-        headerShown: !shouldHideHeaderAndTabBar,
-        ...(process.env.EXPO_OS !== "ios"
-          ? {}
-          : {
-              headerLargeTitle: true,
-              headerTransparent: true,
-              headerBlurEffect: "systemChromeMaterial",
-              headerLargeTitleShadowVisible: false,
-              headerShadowVisible: true,
-              headerLargeStyle: {
-                backgroundColor: "transparent",
-              },
-            }),
+        headerShown: false,
+        
       }}
     >
       <Tabs.Screen
         name="Cards"
         options={{
-          headerTitle: "Cards",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="style" size={24} color={color} />
           ),
@@ -66,7 +55,6 @@ export default function FlashcardsLayout() {
       <Tabs.Screen
         name="ReviewOptions"
         options={{
-          headerTitle: "Review Options",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="refresh" size={24} color={color} />
           ),
@@ -75,7 +63,6 @@ export default function FlashcardsLayout() {
       <Tabs.Screen
         name="Stats"
         options={{
-          headerTitle: "Statistics",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="bar-chart" size={24} color={color} />
           ),
@@ -84,8 +71,9 @@ export default function FlashcardsLayout() {
       <Tabs.Screen
         name="DeckSettings"
         options={{
-          headerTitle: "Deck Settings",
           href: null, // Don't show in tab bar
+          animation: "shift",
+
         }}
       />
       <Tabs.Screen
