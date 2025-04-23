@@ -4,6 +4,7 @@ import { createMergeableStore } from "tinybase/with-schemas";
 
 import { useCreateServerSynchronizerAndStart } from "./synchronization/useCreateServerSynchronizerAndStart";
 import { useCreateClientPersisterAndStart } from "./persistence/useCreateClientPersisterAndStart";
+import { createClientPersister } from "./persistence/createClientPersister";
 
 const VALUES_SCHEMA = {
   name: { type: "string" },
@@ -24,12 +25,21 @@ const TABLES_SCHEMA = {
     updatedAt: { type: "number", default: Date.now() },
     isPublic: { type: "boolean", default: false },
     id: { type: "string" },
+    interval:  { type: "number", default: 0 },
+    nextReview: { type: "number", default: 0 },
+    easeFactor: { type: "number", default: 2.5 },
+    incorrectCount: { type: "number", default: 0 },
+    correctCount: { type: "number", default: 0 },
+
   },
   users: {
     name: { type: "string" },
     profileImageUrl: { type: "string" },
     id: { type: "string" },
   },
+  reviews: {
+
+  }
 } as const;
 
 type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
@@ -37,54 +47,30 @@ type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
 const { useCreateMergeableStore, useProvideStore } =
   UiReact as UiReact.WithSchemas<Schemas>;
 
-export const useStoreId = (id: string) => "DeckStore_" + id;
+export const useDeckStoreId = (id: string) => "DeckStore_" + id;
 
-// Create and initialize a deck store without React hooks
-export function createDeckStore(
-  deckId: string,
-  name?: string,
-  color?: string,
-  folderId?: string
-) {
-  const store = createMergeableStore().setSchema(TABLES_SCHEMA, VALUES_SCHEMA);
-
-  // Initialize the store with values if provided
-  if (name) {
-    store.setValue("name", name);
-    store.setValue("id", deckId);
-    store.setValue("createdAt", Date.now());
-    store.setValue("updatedAt", Date.now());
-
-    if (color) {
-      store.setValue("color", color);
-    }
-
-    if (folderId) {
-      store.setValue("folderId", folderId);
-    }
-
-    // Store initial description as empty string
-    store.setValue("description", "");
-  }
-
-  return store;
-}
-
+// TO DO: create and provide and intialize the deck stores inside the Userstore. Then use the same approach as in the shopping list 
+// tutorial of having a deck values copy in the User store. When creating a new deck 
 // React hook for using a deck store
-export default function DeckStore(
-  deckId: string,
-  name?: string,
-  color?: string,
-  folderId?: string
-) {
-  const storeId = useStoreId(deckId);
+export default function DeckStore({
+    deckId,
+     useValuesCopy,
+    } : {
+    deckId: string,
+    useValuesCopy?: (id: string) => [string, (valuesCopy: string)=> void];
+  }) {
+    console.log("DeckStore")
+
+    const [valuesCopy, setValuesCopy] = useValuesCopy(deckId)
+
+  const storeId = useDeckStoreId(deckId);
   const store = useCreateMergeableStore(() =>
-    createDeckStore(deckId, name, color, folderId)
+    createMergeableStore().setSchema(TABLES_SCHEMA, VALUES_SCHEMA)
   );
 
-  useCreateClientPersisterAndStart(storeId, store);
-  useCreateServerSynchronizerAndStart(storeId, store);
+  useCreateClientPersisterAndStart(storeId, store, valuesCopy);
+  // useCreateServerSynchronizerAndStart(storeId, store);
   useProvideStore(storeId, store);
 
-  return store;
+  return null;
 }

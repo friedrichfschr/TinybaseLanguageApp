@@ -1,0 +1,5 @@
+{
+    "github.copilot.chat.edits.codesearch.enabled": true,
+    "github.copilot.chat.languageContext.typescript.enabled": true,
+    "notebook.defaultFormatter": "esbenp.prettier-vscode"
+}

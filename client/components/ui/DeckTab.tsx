@@ -1,8 +1,8 @@
 import { View, StyleSheet, Alert, Pressable, Platform } from "react-native";
 import React from "react";
-import { useRow } from "tinybase/ui-react";
-import DeckStore from "@/stores/deckStore";
-import { useDelDeckCallback, useUserStoreId } from "@/stores/UserStore";
+import { useRow, useValues } from "tinybase/ui-react";
+import DeckStore, {useDeckStoreId} from "@/stores/deckStore";
+import { useDelDeckCallback, } from "@/stores/UserStore";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Button from "@/components/ui/button";
@@ -10,24 +10,21 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { router } from "expo-router";
 
+
+
 type DeckTabProps = {
   deckId: string;
 };
 
 const DeckTab = ({ deckId }: DeckTabProps) => {
-  const userStoreId = useUserStoreId();
-  const deckData = useRow("decks", deckId, userStoreId);
   const colorScheme = useColorScheme();
   const deleteDeck = useDelDeckCallback();
 
-  // Initialize the deck store
-  const deckStore = DeckStore(
-    deckId,
-    deckData?.name as string,
-    deckData?.color as string,
-    deckData?.folderId as string
-  );
+  const deckStoreId = useDeckStoreId(deckId);
+  const deckValues = useValues(deckStoreId)
 
+  // Initialize the deck store
+  
   // Get the number of cards in the deck (placeholder for now)
   const cardCount = 0; // This can be updated when implementing cards
 
@@ -71,7 +68,7 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
   };
 
   const deckColor =
-    typeof deckData?.color === "string" ? deckData.color : "#0a7ea4";
+    typeof deckValues?.color === "string" ? deckValues.color : "#0a7ea4";
 
   const deckItemStyle = {
     ...styles.deckItem,
@@ -94,7 +91,7 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
           ]}
         >
           <ThemedText type="defaultSemiBold" style={styles.deckName}>
-            {deckData?.name || "Unnamed Deck"}
+            {deckValues?.name || "Unnamed Deck"}
           </ThemedText>
           <ThemedText variant="muted" style={styles.deckCount}>
             {cardCount} cards
