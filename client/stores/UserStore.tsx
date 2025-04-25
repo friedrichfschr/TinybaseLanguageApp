@@ -21,8 +21,11 @@ const TABLES_SCHEMA = {
   folders: {
     id: { type: "string" },
     name: { type: "string" },
+    order: { type: "number", },
+    color: { type: "string", default: "" },
     createdAt: { type: "number", default: Date.now() },
     updatedAt: { type: "number", default: Date.now() },
+    folderId: { type: "string", default: "" },
   },
   decks: {
     id: { type: "string" },
@@ -106,6 +109,7 @@ export const useAddFolderCallback = () => {
 export const useDeckIDs = () => {
   return useRowIds("decks", useUserStoreId());
 };
+
 
 export const useValuesCopy = (
   id: string

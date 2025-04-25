@@ -9,6 +9,7 @@ import Button from "@/components/ui/button";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { router } from "expo-router";
+import { useStateStore } from "@/stores/StateManagement";
 
 type DeckTabProps = {
   deckId: string;
@@ -21,6 +22,7 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
   const deckStoreId = useDeckStoreId(deckId);
   const deckValues = useValues(deckStoreId);
 
+  const {setDeckId} = useStateStore()
   // Initialize the deck store
 
   // Get the number of cards in the deck (placeholder for now)
@@ -33,7 +35,7 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
 
   const handleReviewDeck = () => {
     // Navigate to review/flashcards for this deck
-    router.push(`/(flashcards)/Cards?deckId=${deckId}`);
+    setDeckId(deckId)
   };
 
   const handleDeleteDeck = () => {
@@ -79,7 +81,8 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
       <ThemedView style={styles.deckInfo}>
         <Pressable
           onPress={() => {
-            router.push(`/(flashcards)/Cards?deckId=${deckId}`);
+            router.push(`/(flashcards)/(cards)`);
+            setDeckId(deckId);
           }}
           style={({ pressed }) => [
             styles.pressable,

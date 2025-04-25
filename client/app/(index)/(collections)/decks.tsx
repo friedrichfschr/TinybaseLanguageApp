@@ -13,18 +13,20 @@ import DeckTab from "@/components/ui/DeckTab";
 
 export default function Decks() {
   const deckIds = useDeckIDs();
-
   const handleCreateDeck = () => {
     router.push("/(index)/(collections)/createDeck");
   };
 
+  const handleCreateFolder = () => {
+    
+  }
   return (
     <ThemedSafeAreaView style={{ flex: 1 }}>
       <ThemedView style={styles.header}>
         <ThemedText type="title" variant="primary">
           My Collections
         </ThemedText>
-        <Button variant="outline" onPress={handleCreateDeck}>
+        <Button variant="outline" onPress={handleCreateFolder}>
           <MaterialIcons name="create-new-folder" size={24} />
         </Button>
       </ThemedView>

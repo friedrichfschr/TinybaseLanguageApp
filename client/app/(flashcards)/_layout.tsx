@@ -8,8 +8,8 @@ export default function FlashcardsLayout() {
 
   // Determine if the current screen should hide header and tab bar
   const shouldHideTabBar =
-    pathname?.includes("/reviewing") || pathname?.includes("/Reviewing") 
-    || pathname?.includes("/DeckSettings");
+     pathname?.includes("/Reviewing") || pathname?.includes("/DeckSettings")
+      || pathname?.includes("/createCard");
 
   // Get theme colors for tabs
   const backgroundColor = useThemeColor({}, "background");
@@ -32,6 +32,7 @@ export default function FlashcardsLayout() {
           shadowOpacity: 0.1,
           shadowRadius: 4,
           display: shouldHideTabBar ? "none" : "flex",
+          paddingEnd: 16,
         },
         tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: mutedColor,
@@ -45,8 +46,9 @@ export default function FlashcardsLayout() {
       }}
     >
       <Tabs.Screen
-        name="Cards"
+        name="(cards)"
         options={{
+          title: "Cards",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="style" size={24} color={color} />
           ),
@@ -84,6 +86,7 @@ export default function FlashcardsLayout() {
           href: null, // Don't show in tab bar
         }}
       />
+      
     </Tabs>
   );
 }

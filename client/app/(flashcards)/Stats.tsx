@@ -4,10 +4,10 @@ import { useLocalSearchParams } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedScrollView } from "@/components/ThemedView";
 import FlashcardHeader from "@/components/ui/FlashcardHeader";
+import { useStateStore } from "@/stores/StateManagement";
 
 export default function Stats() {
-  const { deckId } = useLocalSearchParams<{ deckId: string }>();
-  
+  const { deckId } = useStateStore()
   return (
     <View style={styles.container}>
       <FlashcardHeader title="Statistics" deckId={deckId} />

@@ -33,7 +33,29 @@ export default function RootLayout() {
           <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
           >
-            <Slot />
+            <Stack>
+              <Stack.Screen
+                name="(index)"
+                options={{
+                  headerShown: false,
+                  animation: "fade",
+                }}
+              />
+              <Stack.Screen
+                name="(flashcards)"
+                options={{
+                  headerShown: false,
+                  animation: "slide_from_right"
+                }}
+              />
+              <Stack.Screen
+                name="(auth)"
+                options={{
+                  headerShown: false,
+                  animation: "slide_from_right"
+                }}
+                />
+            </Stack>
             <StatusBar style="auto" />
           </ThemeProvider>
         </ClerkLoaded>

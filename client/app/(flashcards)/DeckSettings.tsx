@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedSafeAreaView, ThemedView } from "@/components/ThemedView";
+import { ThemedScrollView  } from "@/components/ThemedView";
 import Button from "@/components/ui/button";
 import { router } from "expo-router";
 import FlashcardHeader from "@/components/ui/FlashcardHeader";
@@ -11,9 +11,9 @@ interface SettingsProps {
 
 export default function Settings({deckId}: SettingsProps) {
   return (
-    <ThemedSafeAreaView style={styles.container}>
+    <ThemedScrollView style={styles.container}>
         <FlashcardHeader title="Settings" deckId={deckId} backFunction={router.back}/>
-    </ThemedSafeAreaView>
+    </ThemedScrollView>
   );
 }
 

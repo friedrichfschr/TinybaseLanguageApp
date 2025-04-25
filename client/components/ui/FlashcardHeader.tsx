@@ -1,10 +1,17 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Platform } from "react-native";
 import { ExternalPathString, RelativePathString, router, usePathname } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedSafeAreaView } from "@/components/ThemedView";
 import Button from "@/components/ui/button";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useCell, useValue } from "tinybase/ui-react";
+import { useDeckStoreId } from "@/stores/deckStore";
+import { ScreenStackHeaderBackButtonImage } from "react-native-screens";
+import { useStateStore } from "@/stores/StateManagement";
+import { useThemeColor } from "@/hooks/useThemeColor";
+
+
 
 interface FlashcardHeaderProps {
   title: string;
@@ -12,10 +19,16 @@ interface FlashcardHeaderProps {
   backFunction?: any;
 }
 
-export default function FlashcardHeader({ title, deckId, backFunction=()=>router.push("/(index)/(collections)/decks")}: FlashcardHeaderProps) {
+export default function FlashcardHeader({ title, deckId, backFunction=()=>{router.push("/(index)/(collections)/decks")
+  useStateStore.getState().setDeckId("")
+}}: FlashcardHeaderProps) {
   const pathname = usePathname();
-  
+  const deckColor = useValue("color", useDeckStoreId(deckId)) as string;
+  const normalBackgroundColor = useThemeColor({}, "background");
+
   const hideSettingsButton = pathname?.includes("/DeckSettings")
+
+  
 
   const handleBackPress = () => {
     backFunction()
@@ -30,29 +43,27 @@ export default function FlashcardHeader({ title, deckId, backFunction=()=>router
   };
 
   return (
-    <ThemedSafeAreaView >
-      <View style={styles.header}>
+      <View style={{...styles.header, backgroundColor: deckColor }}>
         <Button 
           variant="ghost" 
           onPress={handleBackPress} 
           style={styles.iconButton}
         >
-          <MaterialIcons name="arrow-back" size={24} />
+          <MaterialIcons name="arrow-back" size={24} color={"white"}/>
         </Button>
         
         <ThemedText type="subtitle" style={styles.title}>
           {title}
         </ThemedText>
-        
-        {!hideSettingsButton && <Button 
+         <Button 
           variant="ghost" 
           onPress={handleSettingsPress} 
+          disabled={hideSettingsButton}
           style={styles.iconButton}
         >
-          <MaterialIcons name="settings" size={24} />
-        </Button>}
+          <MaterialIcons name="settings" size={24} color={hideSettingsButton ? normalBackgroundColor : "white"}/>
+        </Button>
       </View>
-    </ThemedSafeAreaView>
   );
 }
 
@@ -64,6 +75,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 12,
     width: "100%",
+    paddingTop: Platform.OS === "android" ? 40 : Platform.OS === "ios" ? 50 : 5,
+    
   },
   title: {
     textAlign: "center",
@@ -74,6 +87,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     justifyContent: "center",
-    alignItems: "center",
+    alignSelf: "center",
   },
 });
