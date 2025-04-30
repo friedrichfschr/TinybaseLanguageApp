@@ -50,7 +50,6 @@ export default function CollectionsLayout() {
         options={{
           presentation: "modal",
           headerShown: true,
-          header: () => <Header />,
         }}
       />
     </Stack>

@@ -2,6 +2,7 @@ import { Tabs } from "expo-router/tabs";
 import { usePathname } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import {Platform} from "react-native";
 
 export default function FlashcardsLayout() {
   const pathname = usePathname();
@@ -25,14 +26,12 @@ export default function FlashcardsLayout() {
           borderTopColor: "rgba(0, 0, 0, 0.1)",
           paddingTop: 8,
           paddingBottom: 8,
-          height: 60,
           elevation: 8,
           shadowColor: "#000",
           shadowOffset: { width: 0, height: -2 },
           shadowOpacity: 0.1,
           shadowRadius: 4,
           display: shouldHideTabBar ? "none" : "flex",
-          paddingEnd: 16,
         },
         tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: mutedColor,

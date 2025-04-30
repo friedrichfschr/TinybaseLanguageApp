@@ -1,17 +1,17 @@
-import { useRemoteRowId } from "tinybase/ui-react";
 import * as UiReact from "tinybase/ui-react/with-schemas";
-import { createMergeableStore } from "tinybase/with-schemas";
+import { createMergeableStore, createRelationships } from "tinybase/with-schemas";
 
 import { useCreateServerSynchronizerAndStart } from "./synchronization/useCreateServerSynchronizerAndStart";
 import { useCreateClientPersisterAndStart } from "./persistence/useCreateClientPersisterAndStart";
 import { createClientPersister } from "./persistence/createClientPersister";
+import { useCallback } from "react";
+import { randomUUID } from "expo-crypto";
 
 const VALUES_SCHEMA = {
   name: { type: "string" },
   description: { type: "string" },
   createdAt: { type: "number", default: Date.now() },
   updatedAt: { type: "number", default: Date.now() },
-  isPublic: { type: "boolean", default: false },
   id: { type: "string" },
   color: { type: "string" },
   folderId: { type: "string", default: "" },
@@ -23,7 +23,6 @@ const TABLES_SCHEMA = {
     back: { type: "string" },
     createdAt: { type: "number", default: Date.now() },
     updatedAt: { type: "number", default: Date.now() },
-    isPublic: { type: "boolean", default: false },
     id: { type: "string" },
     interval: { type: "number", default: 0 },
     nextReview: { type: "number", default: 0 },
@@ -31,21 +30,37 @@ const TABLES_SCHEMA = {
     incorrectCount: { type: "number", default: 0 },
     correctCount: { type: "number", default: 0 },
   },
-  users: {
-    name: { type: "string" },
-    profileImageUrl: { type: "string" },
-    id: { type: "string" },
+  reviews: {
+    date: { type: "number" },
+
   },
-  reviews: {},
 } as const;
 
 type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
 
-const { useCreateMergeableStore, useProvideStore, useValuesListener } =
+const { useCreateMergeableStore, useProvideStore, useValuesListener, useStore, useCreateRelationships } =
   UiReact as UiReact.WithSchemas<Schemas>;
 
 export const useDeckStoreId = (id: string) => "DeckStore_" + id;
 
+export const useAddCardCallback = (
+  deckId: string,
+) => {
+  const storeId = useDeckStoreId(deckId);
+  const store = useStore(storeId);
+  return useCallback((front: string, back: string, definition: string) => {
+    const cardId = randomUUID();
+    const card = {
+      front,
+      back,
+      definition,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      id: cardId,
+    };
+    store.setRow("cards", cardId, card);
+  }, [deckId, storeId]);
+}
 
 export default function DeckStore({
   deckId,
@@ -62,11 +77,14 @@ export default function DeckStore({
   const store = useCreateMergeableStore(() =>
     createMergeableStore().setSchema(TABLES_SCHEMA, VALUES_SCHEMA)
   );
+  const relationShips = useCreateRelationships(store, () => {
+    return createRelationships(store)
+  })
 
   useValuesListener(
-    ()=> setValuesCopy(JSON.stringify({...store.getValues(),deckId })),
+    () => setValuesCopy(JSON.stringify({ ...store.getValues(), deckId })),
     [setValuesCopy],
-    false, 
+    false,
     store
   )
 

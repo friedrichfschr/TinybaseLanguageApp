@@ -7,7 +7,7 @@ export default function AuthRoutesLayout() {
     return null;
   }
   if (isSignedIn) {
-    return <Redirect href={"/(index)/(collections)/decks"}></Redirect>;
+    return <Redirect href={"/(index)/(index)/(collections)/decks"}></Redirect>;
   }
   return (
     <Stack
@@ -15,16 +15,16 @@ export default function AuthRoutesLayout() {
         ...(process.env.EXPO_OS !== "ios"
           ? {}
           : {
-              headerLargeTitle: true,
-              headerTransparent: true,
-              headerBlurEffect: "systemChromeMaterial",
-              headerLargeTitleShadowVisible: false,
-              headerShadowVisible: true,
-              headerLargeStyle: {
-                // NEW: Make the large title transparent to match the background.
-                backgroundColor: "transparent",
-              },
-            }),
+            headerLargeTitle: true,
+            headerTransparent: true,
+            headerBlurEffect: "systemChromeMaterial",
+            headerLargeTitleShadowVisible: false,
+            headerShadowVisible: true,
+            headerLargeStyle: {
+              // NEW: Make the large title transparent to match the background.
+              backgroundColor: "transparent",
+            },
+          }),
       }}
     >
       <Stack.Screen name="index" options={{ headerTitle: "Sign in" }} />

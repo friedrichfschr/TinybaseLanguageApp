@@ -4,7 +4,6 @@ import { useRow, useValues } from "tinybase/ui-react";
 import DeckStore, { useDeckStoreId } from "@/stores/deckStore";
 import { useDelDeckCallback } from "@/stores/UserStore";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import Button from "@/components/ui/button";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -22,7 +21,7 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
   const deckStoreId = useDeckStoreId(deckId);
   const deckValues = useValues(deckStoreId);
 
-  const {setDeckId} = useStateStore()
+  const { setDeckId } = useStateStore()
   // Initialize the deck store
 
   // Get the number of cards in the deck (placeholder for now)
@@ -78,10 +77,10 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
 
   return (
     <View style={deckItemStyle}>
-      <ThemedView style={styles.deckInfo}>
+      <View style={styles.deckInfo}>
         <Pressable
           onPress={() => {
-            router.push(`/(flashcards)/(cards)`);
+            router.push(`/(index)/(flashcards)/(cards)`);
             setDeckId(deckId);
           }}
           style={({ pressed }) => [
@@ -96,9 +95,9 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
             {cardCount} cards
           </ThemedText>
         </Pressable>
-      </ThemedView>
+      </View>
 
-      <ThemedView style={styles.actions}>
+      <View style={styles.actions}>
         <Button
           variant="ghost"
           size="sm"
@@ -137,7 +136,7 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
             <MaterialIcons name="delete" size={20} color="white" />
           )}
         </Button>
-      </ThemedView>
+      </View>
     </View>
   );
 };

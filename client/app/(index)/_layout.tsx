@@ -1,86 +1,45 @@
-import { Tabs } from "expo-router/tabs";
-import { StyleSheet } from "react-native";
+import { Redirect, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import "react-native-reanimated";
 import { SignedIn, useClerk } from "@clerk/clerk-expo";
-import { Redirect } from "expo-router";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { Inspector } from "tinybase/ui-react-inspector";
+
+import { useColorScheme } from "@/hooks/useColorScheme";
 import UserStore from "@/stores/UserStore";
 
-export default function AppLayout() {
+const publisehableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+
+if (!publisehableKey) {
+  console.error("Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY");
+}
+
+export default function RootLayout() {
+  const colorScheme = useColorScheme();
   const { user } = useClerk();
 
   if (!user) {
     return <Redirect href="/(auth)" />;
   }
 
-  // Get theme colors for tabs
-  const backgroundColor = useThemeColor({}, "background");
-  const primaryColor = useThemeColor({}, "primary");
-  const mutedColor = useThemeColor({}, "textMuted");
-
-  // Define tab bar styles for consistency
-
   return (
     <SignedIn>
-      <Tabs
-        screenOptions={{
-          tabBarStyle: {
-            backgroundColor,
-            borderTopWidth: 1,
-            borderTopColor: "rgba(0, 0, 0, 0.1)",
-            paddingTop: 8,
-            paddingBottom: 8,
-            height: 60,
-            elevation: 8,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: -2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-          },
-          tabBarActiveTintColor: primaryColor,
-          tabBarInactiveTintColor: mutedColor,
-          tabBarLabelStyle: {
-            fontSize: 12,
-            fontWeight: "500",
-            marginTop: 2,
-          },
-          headerShown: false,
-        }}
-      >
-        <Tabs.Screen
-          name="Books"
+      <Stack>
+        <Stack.Screen
+          name="(index)"
           options={{
-            title: "Books",
-            tabBarIcon: ({ color }) => (
-              <MaterialIcons name="menu-book" size={24} color={color} />
-            ),
+            headerShown: false,
+            animation: "fade",
           }}
         />
-        <Tabs.Screen
-          name="(collections)"
+        <Stack.Screen
+          name="(flashcards)"
           options={{
-            title: "Collections",
-            tabBarIcon: ({ color }) => (
-              <MaterialIcons
-                name="collections-bookmark"
-                size={24}
-                color={color}
-              />
-            ),
+            headerShown: false,
+            animation: "slide_from_right"
           }}
         />
-        <Tabs.Screen
-          name="Profile"
-          options={{
-            title: "Profile",
-            tabBarIcon: ({ color }) => (
-              <MaterialIcons name="person" size={24} color={color} />
-            ),
-          }}
-        />
-      </Tabs>
-      {process.env.EXPO_OS === "web" ? <Inspector /> : null}
+
+      </Stack>
+      <StatusBar style="auto" />
       <UserStore />
     </SignedIn>
   );

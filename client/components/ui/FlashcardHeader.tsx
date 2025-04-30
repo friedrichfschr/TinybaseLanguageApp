@@ -19,51 +19,49 @@ interface FlashcardHeaderProps {
   backFunction?: any;
 }
 
-export default function FlashcardHeader({ title, deckId, backFunction=()=>{router.push("/(index)/(collections)/decks")
+export default function FlashcardHeader({ title, deckId, backFunction = () => {
+  router.push("/(index)/(index)/(collections)/decks")
   useStateStore.getState().setDeckId("")
-}}: FlashcardHeaderProps) {
+} }: FlashcardHeaderProps) {
   const pathname = usePathname();
   const deckColor = useValue("color", useDeckStoreId(deckId)) as string;
   const normalBackgroundColor = useThemeColor({}, "background");
 
   const hideSettingsButton = pathname?.includes("/DeckSettings")
 
-  
+
 
   const handleBackPress = () => {
     backFunction()
   };
-  
+
   const handleSettingsPress = () => {
-    if (deckId) {
-      router.push(`/(flashcards)/DeckSettings`);
-    } else {
-      router.push("/(flashcards)/DeckSettings");
-    }
+    router.push(`/(index)/(flashcards)/DeckSettings`);
+
   };
 
   return (
-      <View style={{...styles.header, backgroundColor: deckColor }}>
-        <Button 
-          variant="ghost" 
-          onPress={handleBackPress} 
-          style={styles.iconButton}
-        >
-          <MaterialIcons name="arrow-back" size={24} color={"white"}/>
-        </Button>
-        
-        <ThemedText type="subtitle" style={styles.title}>
-          {title}
-        </ThemedText>
-         <Button 
-          variant="ghost" 
-          onPress={handleSettingsPress} 
-          disabled={hideSettingsButton}
-          style={styles.iconButton}
-        >
-          <MaterialIcons name="settings" size={24} color={hideSettingsButton ? normalBackgroundColor : "white"}/>
-        </Button>
-      </View>
+    <View style={{ ...styles.header, backgroundColor: deckColor }}>
+      <Button
+        variant="ghost"
+        onPress={handleBackPress}
+        style={styles.iconButton}
+      >
+        <MaterialIcons name="arrow-back" size={24} color={"white"} />
+      </Button>
+
+      <ThemedText type="subtitle" style={styles.title}>
+        {title}
+      </ThemedText>
+      <Button
+        variant="ghost"
+        onPress={handleSettingsPress}
+        disabled={hideSettingsButton}
+        style={styles.iconButton}
+      >
+        <MaterialIcons name="settings" size={24} color={hideSettingsButton ? normalBackgroundColor : "white"} />
+      </Button>
+    </View>
   );
 }
 
@@ -76,7 +74,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     width: "100%",
     paddingTop: Platform.OS === "android" ? 40 : Platform.OS === "ios" ? 50 : 5,
-    
+
   },
   title: {
     textAlign: "center",
