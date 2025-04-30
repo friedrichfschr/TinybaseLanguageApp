@@ -27,7 +27,7 @@ export default function Cards() {
             </ThemedView>
           ))}
         </ThemedScrollView >
-        <Button variant="primary" onPress={() => { router.push("/(index)/(flashcards)/(cards)/createCard") }} style={styles.addCard}>Add Card</Button>
+        <Button variant="primary" onPress={() => { router.push("/(app)/(flashcards)/(cards)/createCard") }} style={styles.addCard}>Add Card</Button>
       </ThemedView>
     </View>
   );

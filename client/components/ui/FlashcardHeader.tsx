@@ -20,7 +20,7 @@ interface FlashcardHeaderProps {
 }
 
 export default function FlashcardHeader({ title, deckId, backFunction = () => {
-  router.push("/(index)/(index)/(collections)/decks")
+  router.push("/(app)/(index)/(collections)/decks")
   useStateStore.getState().setDeckId("")
 } }: FlashcardHeaderProps) {
   const pathname = usePathname();
@@ -36,7 +36,7 @@ export default function FlashcardHeader({ title, deckId, backFunction = () => {
   };
 
   const handleSettingsPress = () => {
-    router.push(`/(index)/(flashcards)/DeckSettings`);
+    router.push(`/(app)/(flashcards)/DeckSettings`);
 
   };
 

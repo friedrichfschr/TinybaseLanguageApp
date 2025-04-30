@@ -7,7 +7,7 @@ export default function AuthRoutesLayout() {
     return null;
   }
   if (isSignedIn) {
-    return <Redirect href={"/(index)/(index)/(collections)/decks"}></Redirect>;
+    return <Redirect href={"/(app)/(index)/(collections)/decks"}></Redirect>;
   }
   return (
     <Stack

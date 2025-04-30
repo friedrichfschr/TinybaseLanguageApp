@@ -80,7 +80,7 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
       <View style={styles.deckInfo}>
         <Pressable
           onPress={() => {
-            router.push(`/(index)/(flashcards)/(cards)`);
+            router.push(`/(app)/(flashcards)/(cards)`);
             setDeckId(deckId);
           }}
           style={({ pressed }) => [
