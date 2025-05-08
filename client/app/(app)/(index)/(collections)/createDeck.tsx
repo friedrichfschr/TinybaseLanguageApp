@@ -37,12 +37,12 @@ const CreateDeck = () => {
     addDeck(deckName, selectedColor, "");
 
     // Navigate back to decks screen
-    router.push("/(index)/(collections)/decks");
+    router.push("/(app)/(index)/(collections)/decks");
   };
 
   const handleCancel = () => {
     router.dismiss();
-    router.push("/(index)/(collections)/decks");
+    router.push("/(app)/(index)/(collections)/decks");
 
   };
 

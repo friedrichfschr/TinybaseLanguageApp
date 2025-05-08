@@ -1,18 +1,17 @@
 import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedScrollView  } from "@/components/ThemedView";
-import Button from "@/components/ui/button";
-import { router } from "expo-router";
+import { ThemedScrollView } from "@/components/ThemedView";
+import { router, usePathname } from "expo-router";
 import FlashcardHeader from "@/components/ui/FlashcardHeader";
+import { useStateStore } from "@/stores/StateManagement";
 
-interface SettingsProps {
-    deckId: string;
-    }
 
-export default function Settings({deckId}: SettingsProps) {
+export default function Settings() {
+  const deckId = useStateStore().deckId;
+  const pathname = usePathname();
   return (
     <ThemedScrollView style={styles.container}>
-        <FlashcardHeader title="Settings" deckId={deckId} backFunction={router.back}/>
+      <FlashcardHeader title="Settings" deckId={deckId} backFunction={router.back} />
     </ThemedScrollView>
   );
 }

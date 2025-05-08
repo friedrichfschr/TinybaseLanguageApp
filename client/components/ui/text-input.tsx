@@ -55,7 +55,7 @@ export const TextInput: React.FC<TextInputProps> = ({
 
   const getVariantStyle = () => {
     const baseStyle: ViewStyle = {
-      borderRadius: 12,
+      borderRadius: 16,
       backgroundColor: colors.surface,
     };
 

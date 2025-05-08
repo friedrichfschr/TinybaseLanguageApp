@@ -37,6 +37,13 @@ export default function RootLayout() {
             animation: "slide_from_right"
           }}
         />
+        <Stack.Screen
+          name="DeckSettings"
+          options={{
+            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        />
 
       </Stack>
       <StatusBar style="auto" />

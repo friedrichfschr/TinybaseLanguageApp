@@ -2,6 +2,8 @@ import { StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedScrollView } from "@/components/ThemedView";
+import Button from "@/components/ui/button";
+import { router } from "expo-router";
 
 export default function Books() {
   return (
@@ -9,6 +11,9 @@ export default function Books() {
       <ThemedScrollView style={styles.scrollView}>
         <ThemedText type="title">Books</ThemedText>
         <ThemedText>Default text color (base)</ThemedText>
+        <Button variant="primary" onPress={() => router.replace("/(app)/(index)/reading")} >
+          Go to Reading
+        </Button>
 
         {/* Showcase all the text color variants */}
         <ThemedText variant="primary" style={styles.spacer}>

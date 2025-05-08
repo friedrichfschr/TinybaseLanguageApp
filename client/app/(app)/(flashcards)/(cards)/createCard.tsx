@@ -22,28 +22,27 @@ const createCard = (props: Props) => {
   const createCard = useAddCardCallback(deckId)
 
   const handleCancel = () => {
-    router.push("/(flashcards)/(cards)")
+    console.log("Cancel")
+    router.dismiss()
+    router.push("/(app)/(flashcards)/(cards)")
   }
   const handleSave = () => {
     createCard(front, back, definition)
-    router.push("/(flashcards)/(cards)")
+    router.dismiss()
   }
+  console.log("createCard",)
   return (
     <>
       <Stack.Screen options={{
         headerLeft: () => (
-          <ThemedView>
-            <Pressable onPress={handleCancel}>
-              <ThemedText>Cancel</ThemedText>
-            </Pressable>
-          </ThemedView>
+          <Pressable onPress={handleCancel} style={{ padding: 8 }}>
+            <ThemedText>Cancel</ThemedText>
+          </Pressable>
         ),
         headerRight: () => (
-          <ThemedView>
-            <Pressable onPress={handleSave}>
-              <ThemedText>Save</ThemedText>
-            </Pressable>
-          </ThemedView>
+          <Pressable onPress={handleSave} style={{ padding: 8 }}>
+            <ThemedText>Save</ThemedText>
+          </Pressable>
         ),
 
         headerTitle: "Create Card",

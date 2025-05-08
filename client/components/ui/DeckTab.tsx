@@ -1,7 +1,7 @@
 import { View, StyleSheet, Alert, Pressable, Platform } from "react-native";
 import React from "react";
-import { useRow, useValues } from "tinybase/ui-react";
-import DeckStore, { useDeckStoreId } from "@/stores/deckStore";
+import { useValues } from "tinybase/ui-react";
+import { useDeckStoreId } from "@/stores/deckStore";
 import { useDelDeckCallback } from "@/stores/UserStore";
 import { ThemedText } from "@/components/ThemedText";
 import Button from "@/components/ui/button";
@@ -9,7 +9,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { router } from "expo-router";
 import { useStateStore } from "@/stores/StateManagement";
-
+import { Dropdown } from "react-native-element-dropdown";
 type DeckTabProps = {
   deckId: string;
 };
@@ -97,46 +97,32 @@ const DeckTab = ({ deckId }: DeckTabProps) => {
         </Pressable>
       </View>
 
-      <View style={styles.actions}>
-        <Button
-          variant="ghost"
-          size="sm"
-          onPress={handleEditDeck}
-          style={styles.actionButton}
-        >
-          {Platform.OS === "web" ? (
-            <ThemedText style={styles.actionButtonText}>Edit</ThemedText>
-          ) : (
-            <MaterialIcons name="edit" size={20} color="white" />
-          )}
-        </Button>
+      <Pressable style={{ marginRight: 40 }} onPress={handleReviewDeck}>
+        <MaterialIcons name="play-arrow" color="white" size={28} />
+      </Pressable>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onPress={handleReviewDeck}
-          style={styles.actionButton}
-        >
-          {Platform.OS === "web" ? (
-            <ThemedText style={styles.actionButtonText}>Review</ThemedText>
-          ) : (
-            <MaterialIcons name="play-arrow" size={20} color="white" />
-          )}
-        </Button>
+      <Dropdown
+        labelField={"label"}
+        valueField={"value"}
+        // value={ }
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onPress={handleDeleteDeck}
-          style={styles.actionButton}
-        >
-          {Platform.OS === "web" ? (
-            <ThemedText style={styles.actionButtonText}>Delete</ThemedText>
-          ) : (
-            <MaterialIcons name="delete" size={20} color="white" />
-          )}
-        </Button>
-      </View>
+        placeholder=""
+        data={[
+          { label: "Edit", value: "edit" },
+          { label: "Delete", value: "delete" },
+        ]}
+        containerStyle={{
+          marginLeft: -16,
+          width: 90,
+        }}
+        renderRightIcon={() => (
+          <MaterialIcons name="more-horiz" color="white" size={28} />
+        )}
+
+        onChange={(value) => {
+
+        }}
+      />
     </View>
   );
 };
@@ -152,6 +138,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.5,
     elevation: 2,
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
   deckInfo: {
     flex: 1,
@@ -168,13 +156,6 @@ const styles = StyleSheet.create({
   deckCount: {
     fontSize: 14,
     color: "rgba(255, 255, 255, 0.8)",
-  },
-  actions: {
-    flexDirection: "row",
-  },
-  actionButton: {
-    marginLeft: 4,
-    minWidth: Platform.OS === "web" ? 60 : 36,
   },
   actionButtonText: {
     color: "white",

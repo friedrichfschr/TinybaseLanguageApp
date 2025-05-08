@@ -1,13 +1,11 @@
 import React from "react";
 import { StyleSheet, View, Platform } from "react-native";
-import { ExternalPathString, RelativePathString, router, usePathname } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedSafeAreaView } from "@/components/ThemedView";
 import Button from "@/components/ui/button";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useCell, useValue } from "tinybase/ui-react";
+import { useValue } from "tinybase/ui-react";
 import { useDeckStoreId } from "@/stores/deckStore";
-import { ScreenStackHeaderBackButtonImage } from "react-native-screens";
 import { useStateStore } from "@/stores/StateManagement";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
@@ -25,7 +23,6 @@ export default function FlashcardHeader({ title, deckId, backFunction = () => {
 } }: FlashcardHeaderProps) {
   const pathname = usePathname();
   const deckColor = useValue("color", useDeckStoreId(deckId)) as string;
-  const normalBackgroundColor = useThemeColor({}, "background");
 
   const hideSettingsButton = pathname?.includes("/DeckSettings")
 
@@ -36,7 +33,7 @@ export default function FlashcardHeader({ title, deckId, backFunction = () => {
   };
 
   const handleSettingsPress = () => {
-    router.push(`/(app)/(flashcards)/DeckSettings`);
+    router.navigate(`/(app)/DeckSettings`);
 
   };
 
@@ -45,7 +42,6 @@ export default function FlashcardHeader({ title, deckId, backFunction = () => {
       <Button
         variant="ghost"
         onPress={handleBackPress}
-        style={styles.iconButton}
       >
         <MaterialIcons name="arrow-back" size={24} color={"white"} />
       </Button>
@@ -57,9 +53,8 @@ export default function FlashcardHeader({ title, deckId, backFunction = () => {
         variant="ghost"
         onPress={handleSettingsPress}
         disabled={hideSettingsButton}
-        style={styles.iconButton}
       >
-        <MaterialIcons name="settings" size={24} color={hideSettingsButton ? normalBackgroundColor : "white"} />
+        <MaterialIcons name="settings" size={24} color={hideSettingsButton ? deckColor : "white"} />
       </Button>
     </View>
   );
@@ -84,7 +79,5 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: "center",
-    alignSelf: "center",
   },
 });

@@ -30,15 +30,13 @@ export default function RootLayout() {
     return (
         <TinybaseProvider>
             <ClerkProvider publishableKey={publisehableKey} tokenCache={tokenCache}>
-                <ClerkLoaded>
-                    <ThemeProvider
-                        value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-                    >
-                        <Slot />
-                        <StatusBar style="auto" />
-                    </ThemeProvider>
-                    {process.env.EXPO_OS === "web" ? <Inspector /> : null}
-                </ClerkLoaded>
+                <ThemeProvider
+                    value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+                >
+                    <Slot />
+                    <StatusBar style="auto" />
+                </ThemeProvider>
+                {process.env.EXPO_OS === "web" ? <Inspector /> : null}
             </ClerkProvider>
         </TinybaseProvider>
     );

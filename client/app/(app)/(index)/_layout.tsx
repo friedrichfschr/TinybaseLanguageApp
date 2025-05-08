@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router/tabs";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { usePathname } from "expo-router";
 
 export default function AppLayout() {
 
@@ -11,7 +12,8 @@ export default function AppLayout() {
   const mutedColor = useThemeColor({}, "textMuted");
 
   // Define tab bar styles for consistency
-
+  const pathname = usePathname();
+  const shouldHideTabBar = pathname.includes("reading")
   return (
     <Tabs
       screenOptions={{
@@ -26,6 +28,7 @@ export default function AppLayout() {
           shadowOffset: { width: 0, height: -2 },
           shadowOpacity: 0.1,
           shadowRadius: 4,
+          display: shouldHideTabBar ? "none" : "flex",
         },
         tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: mutedColor,
@@ -38,12 +41,20 @@ export default function AppLayout() {
       }}
     >
       <Tabs.Screen
-        name="Books"
+        name="books"
         options={{
           title: "Books",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="menu-book" size={24} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="reading"
+        options={{
+          headerShown: false,
+          animation: "fade",
+          href: null, // Don't show in tab bar
         }}
       />
       <Tabs.Screen

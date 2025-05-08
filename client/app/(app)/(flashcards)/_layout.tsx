@@ -2,15 +2,13 @@ import { Tabs } from "expo-router/tabs";
 import { usePathname } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import {Platform} from "react-native";
 
 export default function FlashcardsLayout() {
   const pathname = usePathname();
 
   // Determine if the current screen should hide header and tab bar
   const shouldHideTabBar =
-     pathname?.includes("/Reviewing") || pathname?.includes("/DeckSettings")
-      || pathname?.includes("/createCard");
+    pathname?.includes("/Reviewing")
 
   // Get theme colors for tabs
   const backgroundColor = useThemeColor({}, "background");
@@ -41,7 +39,7 @@ export default function FlashcardsLayout() {
           marginTop: 2,
         },
         headerShown: false,
-        
+
       }}
     >
       <Tabs.Screen
@@ -59,6 +57,7 @@ export default function FlashcardsLayout() {
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="refresh" size={24} color={color} />
           ),
+
         }}
       />
       <Tabs.Screen
@@ -71,9 +70,9 @@ export default function FlashcardsLayout() {
       />
       <Tabs.Screen
         name="DeckSettings"
+
         options={{
           href: null, // Don't show in tab bar
-          animation: "shift",
 
         }}
       />
@@ -85,7 +84,7 @@ export default function FlashcardsLayout() {
           href: null, // Don't show in tab bar
         }}
       />
-      
+
     </Tabs>
   );
 }
