@@ -10,17 +10,13 @@ import { router } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useDeckIDs } from "@/stores/UserStore";
 import DeckTab from "@/components/ui/DeckTab";
-import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function Decks() {
   const deckIds = useDeckIDs();
   const handleCreateDeck = () => {
-    router.push("/(app)/(index)/(collections)/createDeck");
+    router.push("/(app)/createDeck");
   };
-  const textColor = useThemeColor({}, "text");
-  const handleCreateFolder = () => {
-
-  }
+  const handleCreateFolder = () => {};
   return (
     <ThemedSafeAreaView style={{ flex: 1 }}>
       <ThemedView style={styles.header}>
@@ -44,7 +40,6 @@ export default function Decks() {
             <ThemedText variant="muted" style={styles.emptySubtext}>
               Create your first deck to get started
             </ThemedText>
-
           </ThemedView>
         )}
       </ThemedScrollView>

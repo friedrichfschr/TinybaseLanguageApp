@@ -4,8 +4,6 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { usePathname } from "expo-router";
 
 export default function AppLayout() {
-
-
   // Get theme colors for tabs
   const backgroundColor = useThemeColor({}, "background");
   const primaryColor = useThemeColor({}, "primary");
@@ -13,7 +11,7 @@ export default function AppLayout() {
 
   // Define tab bar styles for consistency
   const pathname = usePathname();
-  const shouldHideTabBar = pathname.includes("reading")
+  const shouldHideTabBar = pathname.includes("reading");
   return (
     <Tabs
       screenOptions={{
@@ -41,7 +39,7 @@ export default function AppLayout() {
       }}
     >
       <Tabs.Screen
-        name="books"
+        name="Books"
         options={{
           title: "Books",
           tabBarIcon: ({ color }) => (
@@ -50,15 +48,7 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
-        name="reading"
-        options={{
-          headerShown: false,
-          animation: "fade",
-          href: null, // Don't show in tab bar
-        }}
-      />
-      <Tabs.Screen
-        name="(collections)"
+        name="decks"
         options={{
           title: "Collections",
           tabBarIcon: ({ color }) => (

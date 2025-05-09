@@ -37,42 +37,36 @@ const CreateDeck = () => {
     addDeck(deckName, selectedColor, "");
 
     // Navigate back to decks screen
-    router.push("/(app)/(index)/(collections)/decks");
+    router.dismiss();
+    router.push("/(app)/(index)/decks");
   };
 
   const handleCancel = () => {
     router.dismiss();
-    router.push("/(app)/(index)/(collections)/decks");
-
+    router.push("/(app)/(index)/decks");
   };
 
   return (
     <>
-      <Stack.Screen options={{
-        header: () => <ThemedView
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 16,
-            height: 50,
-          }}
-        >
-          <Pressable onPress={handleCancel}>
-            <ThemedText>Cancel</ThemedText>
-          </Pressable>
+      <Stack.Screen
+        options={{
+          headerLeft: () => (
+            <Pressable onPress={handleCancel} style={{ padding: 8 }}>
+              <ThemedText>Cancel</ThemedText>
+            </Pressable>
+          ),
+          headerRight: () => (
+            <Pressable onPress={handleSave} style={{ padding: 8 }}>
+              <ThemedText>Save</ThemedText>
+            </Pressable>
+          ),
 
-          <Pressable onPress={handleSave}>
-            <ThemedText>Save</ThemedText>
-          </Pressable>
-        </ThemedView>
-      }} />
+          headerTitle: "Create Card",
+        }}
+      />
 
       <ThemedScrollView style={styles.container}>
         <View style={styles.formSection}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>
-            Create a New Deck
-          </ThemedText>
-
           <TextInput
             label="Deck Name"
             value={deckName}
@@ -104,7 +98,9 @@ const CreateDeck = () => {
 
                 return (
                   <View key={color.value} style={styles.colorOptionContainer}>
-                    <ThemedText style={styles.colorName}>{color.name}</ThemedText>
+                    <ThemedText style={styles.colorName}>
+                      {color.name}
+                    </ThemedText>
                     <Button
                       onPress={() => setSelectedColor(color.value)}
                       style={colorButtonStyle}
@@ -128,7 +124,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: 50,
   },
   formSection: {
     marginTop: 16,

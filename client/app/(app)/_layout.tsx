@@ -34,7 +34,7 @@ export default function RootLayout() {
           name="(flashcards)"
           options={{
             headerShown: false,
-            animation: "slide_from_right"
+            animation: "slide_from_right",
           }}
         />
         <Stack.Screen
@@ -44,7 +44,32 @@ export default function RootLayout() {
             animation: "slide_from_right",
           }}
         />
-
+        <Stack.Screen
+          name="createDeck"
+          options={{
+            presentation: "modal",
+          }}
+        />
+        <Stack.Screen
+          name="createCard"
+          options={{
+            presentation: "modal",
+          }}
+        />
+        <Stack.Screen
+          name="Reviewing"
+          options={{
+            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        />
+        <Stack.Screen
+          name="Reading"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
       </Stack>
       <StatusBar style="auto" />
       <UserStore />

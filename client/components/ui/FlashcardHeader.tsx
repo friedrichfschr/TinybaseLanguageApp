@@ -9,40 +9,36 @@ import { useDeckStoreId } from "@/stores/deckStore";
 import { useStateStore } from "@/stores/StateManagement";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
-
-
 interface FlashcardHeaderProps {
   title: string;
   deckId?: string;
   backFunction?: any;
 }
 
-export default function FlashcardHeader({ title, deckId, backFunction = () => {
-  router.push("/(app)/(index)/(collections)/decks")
-  useStateStore.getState().setDeckId("")
-} }: FlashcardHeaderProps) {
+export default function FlashcardHeader({
+  title,
+  deckId,
+  backFunction = () => {
+    router.push("/(app)/(index)/decks");
+    useStateStore.getState().setDeckId("");
+  },
+}: FlashcardHeaderProps) {
   const pathname = usePathname();
   const deckColor = useValue("color", useDeckStoreId(deckId)) as string;
 
-  const hideSettingsButton = pathname?.includes("/DeckSettings")
-
-
+  const hideSettingsButton = pathname?.includes("/DeckSettings");
 
   const handleBackPress = () => {
-    backFunction()
+    backFunction();
   };
 
   const handleSettingsPress = () => {
     router.navigate(`/(app)/DeckSettings`);
-
   };
 
   return (
     <View style={{ ...styles.header, backgroundColor: deckColor }}>
-      <Button
-        variant="ghost"
-        onPress={handleBackPress}
-      >
+      <Button variant="ghost" onPress={handleBackPress}>
         <MaterialIcons name="arrow-back" size={24} color={"white"} />
       </Button>
 
@@ -54,7 +50,11 @@ export default function FlashcardHeader({ title, deckId, backFunction = () => {
         onPress={handleSettingsPress}
         disabled={hideSettingsButton}
       >
-        <MaterialIcons name="settings" size={24} color={hideSettingsButton ? deckColor : "white"} />
+        <MaterialIcons
+          name="settings"
+          size={24}
+          color={hideSettingsButton ? deckColor : "white"}
+        />
       </Button>
     </View>
   );
@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     width: "100%",
     paddingTop: Platform.OS === "android" ? 40 : Platform.OS === "ios" ? 50 : 5,
-
   },
   title: {
     textAlign: "center",
