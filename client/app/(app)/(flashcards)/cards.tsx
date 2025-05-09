@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View,
   TextInput as RNTextInput,
+  Pressable,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -16,6 +17,15 @@ import { useDeckStoreId } from "@/stores/deckStore";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import { useThemeColor } from "@/hooks/useThemeColor";
+
+const formatDate = (date: Date) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+}
 
 export default function Cards() {
   const { deckId } = useStateStore();
@@ -49,6 +59,7 @@ export default function Cards() {
   // Update filtered cards whenever allCards changes
   useEffect(() => {
     setFilteredCards(allCards);
+    setSearchQuery("");
   }, [allCards]);
 
   // Setup dot animation
@@ -121,7 +132,8 @@ export default function Cards() {
         <ScrollView style={styles.cards}>
           {filteredCards &&
             Object.entries(filteredCards).map(([key, card]) => (
-              <View
+              <Pressable
+                onPress={() => router.push(`/(app)/editCard?cardId=${card.id}`)}
                 key={key}
                 style={{
                   flex: 1,
@@ -137,7 +149,14 @@ export default function Cards() {
                   <ThemedText>{card.front}</ThemedText>
                   <ThemedText>{card.back}</ThemedText>
                 </View>
-              </View>
+                <View>
+                  <ThemedText style={styles.description}>
+                    {
+                      formatDate(new Date(card.nextReview))
+                      || "No review date"}
+                  </ThemedText>
+                </View>
+              </Pressable>
             ))}
         </ScrollView>
         <Button

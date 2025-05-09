@@ -221,6 +221,8 @@ function ReaderContent() {
           enableSwipe={true}
           enableSelection={true}
           onSelected={handleSelected}
+          onLocationChange={() => { }}
+          initialLocation=""
           menuItems={selectionMenuItems}
         />
       </View>
