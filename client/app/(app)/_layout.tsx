@@ -47,12 +47,21 @@ export default function RootLayout() {
         <Stack.Screen
           name="createDeck"
           options={{
+            title: "Create Deck",
             presentation: "modal",
           }}
         />
         <Stack.Screen
           name="createCard"
           options={{
+            title: "Create Card",
+            presentation: "modal",
+          }}
+        />
+        <Stack.Screen
+          name="editCard"
+          options={{
+            title: "Edit Card",
             presentation: "modal",
           }}
         />

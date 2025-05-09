@@ -95,7 +95,7 @@ export default function Books() {
 
   // Handle book selection to open the reader
   const handleBookSelect = (book: Book) => {
-    router.push({
+    router.replace({
       pathname: "/(app)/Reading",
       params: {
         url: book.bookUrl,

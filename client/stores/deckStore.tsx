@@ -34,7 +34,7 @@ const TABLES_SCHEMA = {
   },
 } as const;
 
-type Schemas = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
+export type DeckSchema = [typeof TABLES_SCHEMA, typeof VALUES_SCHEMA];
 
 const {
   useCreateMergeableStore,
@@ -43,7 +43,7 @@ const {
   useStore,
   useCreateMetrics,
   useProvideMetrics,
-} = UiReact as UiReact.WithSchemas<Schemas>;
+} = UiReact as UiReact.WithSchemas<DeckSchema>;
 
 export const useDeckStoreId = (id: string) => "DeckStore_" + id;
 
@@ -66,6 +66,33 @@ export const useAddCardCallback = (deckId: string) => {
     [deckId, storeId]
   );
 };
+
+export const useEditCardCallback = (deckId: string) => {
+  const storeId = useDeckStoreId(deckId);
+  const store = useStore(storeId);
+  return useCallback(
+    (cardId: string, front: string, back: string) => {
+      const card = {
+        front,
+        back,
+        updatedAt: Date.now(),
+      };
+      store.setRow("cards", cardId, card);
+    },
+    [deckId, storeId]
+  );
+}
+
+export const useDeleteCardCallback = (deckId: string) => {
+  const storeId = useDeckStoreId(deckId);
+  const store = useStore(storeId);
+  return useCallback(
+    (cardId: string) => {
+      store.delRow("cards", cardId);
+    },
+    [deckId, storeId]
+  );
+}
 
 export default function DeckStore({
   deckId,
