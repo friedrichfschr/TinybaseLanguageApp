@@ -183,7 +183,7 @@ export default function UserStore() {
   );
 
   useCreateClientPersisterAndStart(storeId, store);
-  // useCreateServerSynchronizerAndStart(storeId, store);
+  useCreateServerSynchronizerAndStart(storeId, store);
   useProvideStore(storeId, store);
 
   return Object.entries(useTable("decks", storeId)).map(([deckId]) => {

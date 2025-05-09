@@ -15,7 +15,7 @@ Database = sqlite.Database;
 const db = new Database("tinybase.db");
 
 SocketServer = new WebSocketServer({
-  port: 8047,
+  port: 8048,
 });
 
 SocketServer.on("connection", (ws) => {

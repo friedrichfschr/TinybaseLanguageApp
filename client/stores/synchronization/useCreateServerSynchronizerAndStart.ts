@@ -24,7 +24,7 @@ export const useCreateServerSynchronizerAndStart = <
 
   const token = session?.lastActiveToken?.jwt;
 
-  const url = `${SYNC_SERVER_URL}${storeId}?token=${token}`;
+  const url = `${SYNC_SERVER_URL}/${storeId}?token=${token}`;
 
   (UiReact as UiReact.WithSchemas<Schemas>).useCreateSynchronizer(
     store,

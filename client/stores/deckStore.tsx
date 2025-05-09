@@ -104,7 +104,7 @@ export default function DeckStore({
   );
 
   useCreateClientPersisterAndStart(storeId, store, valuesCopy);
-  // useCreateServerSynchronizerAndStart(storeId, store);
+  useCreateServerSynchronizerAndStart(storeId, store);
   useProvideStore(storeId, store);
   useProvideMetrics(storeId, metrics);
   return null;
